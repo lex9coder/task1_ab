@@ -1,0 +1,37 @@
+version: '3.0'
+
+services:
+  nginx:
+    build:
+      context: ./docker/nginx
+    volumes:
+      - ./app:/symfony
+    container_name: task1-nginx
+    restart: always
+    ports:
+      - "10000:80"
+
+  php:
+    build:
+      context: ./docker/php
+    volumes:
+      - ./app:/symfony
+    container_name: task1-php
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql:/var/lib/mysql
+    container_name: task1-mysql
+    restart: always
+    environment:
+      - "MYSQL_ROOT_PASSWORD=_tmp_"
+      - "MYSQL_DATABASE=app_symfony"
+      - "MYSQL_USER=symfony"
+      - "MYSQL_PASSWORD=symfony1"
+
+volumes:
+  mysql:
