@@ -1,9 +1,13 @@
 ## Установка
 
-docker-compose run --rm php composer install
-docker-compose run --rm php php bin/console doctrine:migrations:migrate --no-interaction
-docker-compose run --rm php php bin/console doctrine:fixtures:load --no-interaction
 
+- git clone https://github.com/lex9coder/task1_ab.git
+- cd task1_ab
+- docker-compose up --build -d
+- docker-compose run --rm php composer install
+- docker-compose run --rm php php bin/console doctrine:migrations:migrate --no-interaction
+- docker-compose run --rm php php bin/console doctrine:fixtures:load --no-interaction
+- http://*_server_ip_*:10000/
 
 ## API
 ## Authors
