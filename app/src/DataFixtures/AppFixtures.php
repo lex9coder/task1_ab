@@ -12,15 +12,21 @@ use App\Entity\Author;
 class AppFixtures extends Fixture
 {
 
-    private $generate_count = 1000;
+    private $generate_count = 10000;
 
     public function load(ObjectManager $manager): void
     {
+        $manager->getConnection()->getConfiguration()->setSQLLogger(null);
 
         for ($i = 0; $i < $this->generate_count; $i++) {
             $author = new Author();
             $author->setName('author '.$i);
             $manager->persist($author);
+
+            if (($i % 20) === 0) {
+                $manager->flush();
+                $manager->clear();
+            }
         }
         $manager->flush();
 
@@ -34,6 +40,11 @@ class AppFixtures extends Fixture
                 $book->addAuthor($author);
             }
             $manager->persist($book);
+
+            if (($i % 20) === 0) {
+                $manager->flush();
+                $manager->clear();
+            }
         }
 
         $manager->flush();
