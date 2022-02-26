@@ -54,4 +54,10 @@ class AuthorRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
+    public function delete(Author $author): void
+    {
+        $this->getEntityManager()->remove($author);
+        $this->getEntityManager()->flush();
+    }
+
 }

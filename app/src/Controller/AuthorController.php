@@ -9,7 +9,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 
 use App\Entity\Author;
-use App\Repository\AuthorRepository;
 
 class AuthorController extends AbstractController
 {
@@ -17,7 +16,7 @@ class AuthorController extends AbstractController
     /**
      * @Route("/author/create", methods={"POST"})
      */
-    public function create(AuthorRepository $authorRepository): Response
+    public function create(): Response
     {
         $request = Request::createFromGlobals();
         $data = json_decode($request->getContent(), true);
@@ -33,6 +32,7 @@ class AuthorController extends AbstractController
         $author = new Author();
         $author->setName($data['name']);
 
+        $authorRepository = $this->getDoctrine()->getRepository(Author::class);
         $authorRepository->save($author);
 
         return $this->json([
@@ -41,16 +41,48 @@ class AuthorController extends AbstractController
         ]);
     }
 
+
+    /**
+     * @Route("/author/update/{id}", methods={"PUT"}, requirements={"id"="\d+"})
+     */
+    public function update(Request $request, $id): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $authorRepository = $this->getDoctrine()->getRepository(Author::class);
+        $author = $authorRepository->find($id);
+
+        if (!$author) {
+            return $this->json(['message' => 'Author by Id not found']);
+        }
+
+        if (!$data) {
+          return $this->json(['message' => 'Request is empty']);
+        }
+
+        if (!array_key_exists('name', $data)) {
+          return $this->json(['message' => 'Field Name is empty']);
+        }
+
+        $author->setName($data['name']);
+        $authorRepository->save($author);
+
+        return $this->json([
+            'message' => 'Author updated',
+            'id' => $author->getId()
+        ]);
+    }
+
+
     /**
      * @Route("/author/search", methods={"GET"})
      */
-    public function search(AuthorRepository $authorRepository): Response
+    public function search(Request $request): Response
     {
-
-        $request = Request::createFromGlobals();
         $name = $request->query->get('name', '');
 
         try {
+            $authorRepository = $this->getDoctrine()->getRepository(Author::class);
             $authors = $authorRepository->findByName($name);
 
             $jsonContent = [];
@@ -63,5 +95,23 @@ class AuthorController extends AbstractController
 
         return $this->json($jsonContent);
     }
+
+    /**
+     * @Route("/author/delete/{id}", methods={"DELETE"}, requirements={"id"="\d+"})
+     */
+    public function delete(Request $request, $id): Response
+    {
+        $authorRepository = $this->getDoctrine()->getRepository(Author::class);
+        $author = $authorRepository->find($id);
+
+        if (!$author) {
+            return $this->json(['message' => 'Author by Id not found']);
+        }
+
+        $authorRepository->delete($author);
+
+        return $this->json(['message' => 'Author deleted']);
+    }
+
 
 }
