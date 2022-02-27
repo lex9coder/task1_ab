@@ -25,7 +25,7 @@ class Book
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Author::class, inversedBy="autors")
+     * @ORM\ManyToMany(targetEntity=Author::class, inversedBy="authors")
      */
     private $authors;
 

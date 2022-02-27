@@ -33,5 +33,18 @@ services:
       - "MYSQL_USER=symfony"
       - "MYSQL_PASSWORD=symfony1"
 
+  myadmin:
+      image: phpmyadmin/phpmyadmin
+      container_name: test1-pma
+      ports:
+          - "8080:80"
+      environment:
+          PMA_HOST: task1-mysql
+          PMA_USER: symfony
+          PMA_PASSWORD: symfony1
+      restart: always
+      depends_on:
+          - mysql
+
 volumes:
   mysql:

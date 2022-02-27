@@ -43,7 +43,7 @@ class AuthorController extends AbstractController
 
 
     /**
-     * @Route("/author/update/{id}", methods={"PUT"}, requirements={"id"="\d+"})
+     * @Route("/author/{id}", methods={"PUT"}, requirements={"id"="\d+"})
      */
     public function update(Request $request, $id): Response
     {
@@ -53,7 +53,7 @@ class AuthorController extends AbstractController
         $author = $authorRepository->find($id);
 
         if (!$author) {
-            return $this->json(['message' => 'Author by Id not found']);
+            return $this->json(['message' => 'Author not found']);
         }
 
         if (!$data) {
@@ -71,6 +71,22 @@ class AuthorController extends AbstractController
             'message' => 'Author updated',
             'id' => $author->getId()
         ]);
+    }
+
+    /**
+     * @Route("/author/{id}", methods={"DELETE"}, requirements={"id"="\d+"})
+     */
+    public function delete(Request $request, $id): Response
+    {
+        $authorRepository = $this->getDoctrine()->getRepository(Author::class);
+        $author = $authorRepository->find($id);
+
+        if (!$author) {
+            return $this->json(['message' => 'Author not found']);
+        }
+        $authorRepository->delete($author);
+
+        return $this->json(['message' => 'Book deleted']);
     }
 
 
@@ -95,23 +111,5 @@ class AuthorController extends AbstractController
 
         return $this->json($jsonContent);
     }
-
-    /**
-     * @Route("/author/delete/{id}", methods={"DELETE"}, requirements={"id"="\d+"})
-     */
-    public function delete(Request $request, $id): Response
-    {
-        $authorRepository = $this->getDoctrine()->getRepository(Author::class);
-        $author = $authorRepository->find($id);
-
-        if (!$author) {
-            return $this->json(['message' => 'Author by Id not found']);
-        }
-
-        $authorRepository->delete($author);
-
-        return $this->json(['message' => 'Author deleted']);
-    }
-
 
 }

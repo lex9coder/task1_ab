@@ -27,7 +27,7 @@ class Author
     /**
      * @ORM\ManyToMany(targetEntity=Book::class, mappedBy="authors")
      */
-    private $autors;
+    private $authors;
 
     public function __construct()
     {
@@ -54,25 +54,25 @@ class Author
     /**
      * @return Collection|Book[]
      */
-    public function getAutors(): Collection
+    public function getAuthors(): Collection
     {
-        return $this->autors;
+        return $this->authors;
     }
 
-    public function addAutor(Book $autor): self
+    public function addAuthor(Book $author): self
     {
-        if (!$this->autors->contains($autor)) {
-            $this->autors[] = $autor;
-            $autor->addAuthor($this);
+        if (!$this->authors->contains($author)) {
+            $this->authors[] = $author;
+            $author->addAuthor($this);
         }
 
         return $this;
     }
 
-    public function removeAutor(Book $autor): self
+    public function removeAuthor(Book $author): self
     {
-        if ($this->autors->removeElement($autor)) {
-            $autor->removeAuthor($this);
+        if ($this->authors->removeElement($author)) {
+            $author->removeAuthor($this);
         }
 
         return $this;

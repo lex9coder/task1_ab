@@ -10,21 +10,28 @@
 - открыть в браузере http://*_server_ip_*:10000/
 
 ## Authors
-> GET http://*_server_ip_*:10000/author/search?name=33
+> POST http://*_server_ip_*:10000/author/create
+> {"name":"New Cowboys"}
+>
+> GET http://*_server_ip_*:10000/author/search?name=__name__
+>
+> PUT http://*_server_ip_*:10000/author/{id}
+> {"name":"_author_name_"}
+>
+> DELETE http://*_server_ip_*:10000/author/{id}
 
-> POST curl -d '{"name":"New Cowboys"}' -H "Content-Type: application/json" -X POST http://*_server_ip_*:10000/author/create
 
 ## Books
-> GET http://*_server_ip_*:10000/{ru|en}/book/__ID__
-
 > POST http://*_server_ip_*:10000/author/create
-
-> POST curl -d '{"author_id":_ID__, "name":"new mega book"}' -H "Content-Type: application/json" -X POST http://*_server_ip_*:10000/book/create
+> {"name":"Eye on me", "author_id":10000}
+>
+> GET http://*_server_ip_*:10000/author/search?name=__name__
+>
+> GET http://*_server_ip_*:10000/{ru|en}/book/__ID__
 
 
 ## Далее сделать
 > 1. Тесты
 > 2. Мультиязычность
-> 3. Посев данных выполнять в миграции
-> 4. Перейти на прод окружение
-> 5. Использовать symfony микросервис, не web
+> 3. Перейти на прод окружение
+> 4. Индесы

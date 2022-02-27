@@ -70,6 +70,22 @@ class BookController extends AbstractController
     }
 
     /**
+     * @Route("/book/{id}", methods={"DELETE"}, requirements={"id"="\d+"})
+     */
+    public function delete(Request $request, $id): Response
+    {
+        $bookRepository = $this->getDoctrine()->getRepository(Book::class);
+        $book = $bookRepository->find($id);
+
+        if (!$book) {
+            return $this->json(['message' => 'Book not found']);
+        }
+        $bookRepository->delete($book);
+
+        return $this->json(['message' => 'Book deleted']);
+    }
+
+    /**
      * @Route(
      * "/{lang}/book/{id}",
      * methods={"GET"},
@@ -78,14 +94,18 @@ class BookController extends AbstractController
      */
     public function show(string $lang, int $id): Response
     {
-        $bookRepository = $this->getDoctrine()->getRepository(Book::class);
-
         try {
+            $bookRepository = $this->getDoctrine()->getRepository(Book::class);
             $book = $bookRepository->findOneById($id);
-            $jsonContent = $book->json();
         } catch (\Throwable $th) {
             return $this->json(['message' => $th->getMessage()]);
         }
+
+        if (!$book) {
+            return $this->json(['message' => 'Book not found']);
+        }
+
+        $jsonContent = $book->json();
 
         return $this->json($jsonContent);
     }
